@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
     int c;
     in_file = stdin;
     out_file = stdout;
-    /* Handle program arguments */
+    /* Handle command line arguments */
     for (i = 0; i < argc; i++) {
         if (is_debug_on) {
             fprintf(stderr, "%s\n", argv[i]);
