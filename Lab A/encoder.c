@@ -59,16 +59,16 @@ int main(int argc, char **argv) {
                 j++;
             }
             if (match) {
-                is_debug_on = 1
-            };
+                is_debug_on = 1;
+            }
         }
         else if ((argv[i][0] == '+' || argv[i][0] == '-') && argv[i][1] == 'V') {
             if (argv[i][0] == '+') {
-                shift_direction = 1
-            };
+                shift_direction = 1;
+            }
             else {
-                shift_direction = -1
-            };
+                shift_direction = -1;
+            }
             encoding_string = &argv[i][2];
         }
         else if (argv[i][0] == '-' && argv[i][1] == 'i') {
@@ -90,16 +90,16 @@ int main(int argc, char **argv) {
     while (1) {
         c = fgetc(in_file);
         if (feof(in_file)) {
-            break
-        };
+            break;
+        }
         c = encode(c);
         fputc(c, out_file);
     }
     if (out_file != stdout) {
-        fclose(out_file)
-    };
+        fclose(out_file);
+    }
     if (in_file != stdin) {
-        fclose(in_file)
-    };
+        fclose(in_file);
+    }
     return 0;
 }
