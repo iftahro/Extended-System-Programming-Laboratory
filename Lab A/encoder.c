@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-FILE *infile;
-FILE *outfile;
-unsigned char password[] = "my_password1";
+FILE *in_file;
+FILE *out_file;
+unsigned char debug_pass[] = "my_password1";
 
-char *key = "A"; 
-int key_dir = 1;   
-int key_idx = 0;   
+char *encoding_string = "A"; 
+int shift_direction = 1;   
+int enc_idx = 0;   
 
 int encode(int c) {
     int shift;
@@ -16,7 +16,7 @@ int encode(int c) {
     /* Process only alphabetic characters */
     if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
         
-        shift = (key[key_idx] - 'A') * key_dir;
+        shift = (encoding_string[enc_idx] - 'A') * shift_direction;
 
         if (c >= 'a' && c <= 'z') {
             new_c = c + shift;
@@ -29,10 +29,10 @@ int encode(int c) {
             while (new_c < 'A') new_c += 26;
         }
 
-        key_idx++;
+        enc_idx++;
         
-        if (key[key_idx] == '\0') {
-            key_idx = 0;
+        if (encoding_string[enc_idx] == '\0') {
+            enc_idx = 0;
         }
     }
     
@@ -41,50 +41,50 @@ int encode(int c) {
 
 int main(int argc, char **argv) {
     int i;
-    int debug_mode = 1; 
+    int is_debug_on = 1; 
     int c;
 
-    infile = stdin;
-    outfile = stdout;
+    in_file = stdin;
+    out_file = stdout;
 
     for (i = 0; i < argc; i++) {
-        if (debug_mode) {
+        if (is_debug_on) {
             fprintf(stderr, "%s\n", argv[i]);
         }
 
         if (argv[i][0] == '-' && argv[i][1] == 'D' && argv[i][2] == '\0') {
-            debug_mode = 0;
+            is_debug_on = 0;
         } 
         else if (argv[i][0] == '+' && argv[i][1] == 'D') {
             int j = 0;
             int match = 1;
             
-            while (password[j] != '\0' || argv[i][j + 2] != '\0') {
-                if (password[j] != argv[i][j + 2]) {
+            while (debug_pass[j] != '\0' || argv[i][j + 2] != '\0') {
+                if (debug_pass[j] != argv[i][j + 2]) {
                     match = 0;
                     break;
                 }
                 j++;
             }
             
-            if (match) debug_mode = 1;
+            if (match) is_debug_on = 1;
         }
         else if ((argv[i][0] == '+' || argv[i][0] == '-') && argv[i][1] == 'V') {
-            if (argv[i][0] == '+') key_dir = 1;
-            else key_dir = -1;
+            if (argv[i][0] == '+') shift_direction = 1;
+            else shift_direction = -1;
             
-            key = &argv[i][2];
+            encoding_string = &argv[i][2];
         }
         else if (argv[i][0] == '-' && argv[i][1] == 'i') {
-            infile = fopen(&argv[i][2], "r");
-            if (infile == NULL) {
+            in_file = fopen(&argv[i][2], "r");
+            if (in_file == NULL) {
                 fprintf(stderr, "Error: Cannot open input file %s\n", &argv[i][2]);
                 return 1; 
             }
         }
         else if (argv[i][0] == '-' && argv[i][1] == 'o') {
-            outfile = fopen(&argv[i][2], "w");
-            if (outfile == NULL) {
+            out_file = fopen(&argv[i][2], "w");
+            if (out_file == NULL) {
                 fprintf(stderr, "Error: Cannot open output file %s\n", &argv[i][2]);
                 return 1; 
             }
@@ -93,16 +93,16 @@ int main(int argc, char **argv) {
 
     /* Read and encode input character by character */
     while (1) {
-        c = fgetc(infile);
+        c = fgetc(in_file);
         
-        if (feof(infile)) break;
+        if (feof(in_file)) break;
         
         c = encode(c);
-        fputc(c, outfile);
+        fputc(c, out_file);
     }
 
-    if (outfile != stdout) fclose(outfile);
-    if (infile != stdin) fclose(infile);
+    if (out_file != stdout) fclose(out_file);
+    if (in_file != stdin) fclose(in_file);
 
     return 0;
 }
