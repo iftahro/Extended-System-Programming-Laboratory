@@ -11,7 +11,7 @@ char *key = "A"; /* Default key: 'A' means shift by 0 */
 int key_dir = 1;   /* 1 for addition (+V), -1 for subtraction (-V) */
 int key_idx = 0;   /* Current position in the key */
 
-/* Encode function for Part 2: applies Vigenere cipher */
+/* Encode function for Part 2 and 3: applies Vigenere cipher */
 int encode(int c) {
     int shift;
     int new_c = c;
@@ -104,6 +104,24 @@ int main(int argc, char **argv) {
             }
             /* Set the key pointer to start exactly after the 'V' */
             key = &argv[i][2];
+        }
+        /* Part 3: Check for input file argument (-ifilename) */
+        else if (argv[i][0] == '-' && argv[i][1] == 'i') {
+            /* Open the file for reading. The filename starts after the "-i" */
+            infile = fopen(&argv[i][2], "r");
+            if (infile == NULL) {
+                fprintf(stderr, "Error: Cannot open input file %s\n", &argv[i][2]);
+                return 1; /* Exit with error code */
+            }
+        }
+        /* Part 3: Check for output file argument (-ofilename) */
+        else if (argv[i][0] == '-' && argv[i][1] == 'o') {
+            /* Open the file for writing. The filename starts after the "-o" */
+            outfile = fopen(&argv[i][2], "w");
+            if (outfile == NULL) {
+                fprintf(stderr, "Error: Cannot open output file %s\n", &argv[i][2]);
+                return 1; /* Exit with error code */
+            }
         }
     }
 
