@@ -20,10 +20,10 @@ int secondary(int x)
     int addr3;
     char *yos = "ree";
     int *addr4 = (int *)(malloc(50));
-	int iarray[3];
-    float farray[3];
-    double darray[3];
-    char carray[3]; 
+	int iarray[2];
+    float farray[2];
+    double darray[2];
+    char carray[2]; 
 	int iarray2[] = {1,2,3};
     char carray2[] = {'a','b','c'};
     int* iarray2Ptr;
@@ -53,12 +53,29 @@ int secondary(int x)
     printf("Arrays Mem Layout (T1b):\n");
 
     /* task 1 b here */
+    printf("- iarray: %p, iarray+1: %p\n", iarray, iarray + 1);
+    printf("- farray: %p, farray+1: %p\n", farray, farray + 1);
+    printf("- darray: %p, darray+1: %p\n", darray, darray + 1);
+    printf("- carray: %p, carray+1: %p\n", carray, carray + 1);
     
     printf("Pointers and arrays (T1d): ");
 
     /* task 1 d here */
+    iarray2Ptr = iarray2;
+    carray2Ptr = carray2;
     
-
+    printf("\n- iarray2 values: ");
+    for (int i = 0; i < 3; i++) {
+        printf("%d ", *(iarray2Ptr + i)); 
+    }
+    
+    printf("\n- carray2 values: ");
+    for (int i = 0; i < 3; i++) {
+        printf("%c ", *(carray2Ptr + i));
+    }
+    
+    int *p;
+    printf("\n- uninitialized pointer p: %p\n", p);
 }
 
 int main(int argc, char **argv)
@@ -74,7 +91,10 @@ int main(int argc, char **argv)
     
     printf("Command line arg addresses (T1e):\n");
     /* task 1 e here */
-    
+    for (int i = 0; i < argc; i++) {
+        printf("- &argv[%d]: %p\n", i, &argv[i]);
+        printf("- argv[%d]: %p (content: %s)\n", i, argv[i], argv[i]);
+    }
     return 0;
 }
 
@@ -94,6 +114,7 @@ void point_at(void *p)
     
     printf("Check long type mem size (T1a):\n");
     /* part of task 1 a here */
+    printf("- sizeof(long): %zu bytes\n", sizeof(long));
 
     printf("- addr0: %p\n", &addr0);
     printf("- addr1: %p\n", &addr1);
