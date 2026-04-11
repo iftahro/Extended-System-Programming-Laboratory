@@ -4,5 +4,11 @@ count-words: count-words.o
 count-words.o: count-words.c
 	gcc -m32 -g -Wall -c -o count-words.o count-words.c
 
+addresses: addresses.o
+	gcc -m32 -g -Wall -o addresses addresses.o
+
+addresses.o: addresses.c
+	gcc -m32 -g -Wall -c -o addresses.o addresses.c
+
 clean:
-	rm -f count-words count-words.o
+	rm -f count-words count-words.o addresses addresses.o
