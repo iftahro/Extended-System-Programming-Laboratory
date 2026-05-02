@@ -13,6 +13,7 @@
 int debug_mode = 0;
 
 void execute(cmdLine *pCmdLine) {
+    // Built-in cd command must run in the parent process
     if (strcmp(pCmdLine->arguments[0], "cd") == 0) {
         if (chdir(pCmdLine->arguments[1]) == -1) {
             perror("cd failed");
@@ -51,7 +52,7 @@ void execute(cmdLine *pCmdLine) {
             }
         }
 
-        // Input redirection
+        // Redirect input by replacing STDIN with the opened file descriptor
         if (pCmdLine->inputRedirect != NULL) {
             int fd_in = open(pCmdLine->inputRedirect, O_RDONLY);
             if (fd_in == -1) {
@@ -65,7 +66,7 @@ void execute(cmdLine *pCmdLine) {
             close(fd_in);
         }
 
-        // Output redirection
+        // Redirect output by replacing STDOUT, creating or truncating the file
         if (pCmdLine->outputRedirect != NULL) {
             int fd_out = open(pCmdLine->outputRedirect, O_WRONLY | O_CREAT | O_TRUNC, 0644);
             if (fd_out == -1) {
@@ -84,6 +85,7 @@ void execute(cmdLine *pCmdLine) {
             _exit(1);
         }
     } else if (pid > 0) {
+        // Parent waits only if the command is running in the foreground
         if (pCmdLine->blocking == 1) {
             waitpid(pid, NULL, 0);
         }
